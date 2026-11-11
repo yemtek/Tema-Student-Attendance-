@@ -1,0 +1,127 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Student registered in the institutional attendance system",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "matricNumber": { "type": "string" },
+        "fullName": { "type": "string" },
+        "department": { "type": "string" },
+        "faculty": { "type": "string" },
+        "level": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "password": { "type": "string" },
+        "registeredAt": { "type": "string" },
+        "totalAttendances": { "type": "number" },
+        "lastLogin": { "type": "string" },
+        "status": { "type": "string", "enum": ["Active", "Suspended", "Alumni"] }
+      },
+      "required": ["matricNumber", "fullName", "password"]
+    },
+    "AttendanceRecord": {
+      "title": "AttendanceRecord",
+      "description": "Verification log entry of a student's check-in for a lecture session",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "matricNumber": { "type": "string" },
+        "studentName": { "type": "string" },
+        "department": { "type": "string" },
+        "level": { "type": "string" },
+        "sessionCode": { "type": "string" },
+        "sessionTitle": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "formattedTime": { "type": "string" },
+        "date": { "type": "string" },
+        "status": { "type": "string", "enum": ["Present", "Late", "Excused"] },
+        "deviceInfo": { "type": "string" },
+        "ipAddress": { "type": "string" },
+        "location": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "required": ["matricNumber", "date", "status", "timestamp"]
+    },
+    "SessionConfig": {
+      "title": "SessionConfig",
+      "description": "Active course and attendance threshold settings",
+      "type": "object",
+      "properties": {
+        "courseCode": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "lecturerName": { "type": "string" },
+        "hallLocation": { "type": "string" },
+        "startTime": { "type": "string" },
+        "lateThresholdTime": { "type": "string" },
+        "sessionActive": { "type": "boolean" },
+        "academicSession": { "type": "string" },
+        "semester": { "type": "string" }
+      },
+      "required": ["courseCode", "lateThresholdTime"]
+    },
+    "AppCustomization": {
+      "title": "AppCustomization",
+      "description": "Editable texts, placeholders, colors, and logo branding on student view",
+      "type": "object",
+      "properties": {
+        "languageText": { "type": "string" },
+        "logoType": { "type": "string", "enum": ["letter", "image"] },
+        "logoLetter": { "type": "string" },
+        "logoImageUrl": { "type": "string" },
+        "logoBgColor": { "type": "string" },
+        "logoTextColor": { "type": "string" },
+        "matricPlaceholder": { "type": "string" },
+        "matricInfoTitle": { "type": "string" },
+        "matricInfoDesc": { "type": "string" },
+        "passwordPlaceholder": { "type": "string" },
+        "loginButtonText": { "type": "string" },
+        "loginButtonBgColor": { "type": "string" },
+        "loginButtonTextColor": { "type": "string" },
+        "forgotPasswordText": { "type": "string" },
+        "createAccountButtonText": { "type": "string" },
+        "createAccountBorderColor": { "type": "string" },
+        "createAccountTextColor": { "type": "string" },
+        "footerBrandName": { "type": "string" },
+        "footerBrandIconType": { "type": "string", "enum": ["meta", "custom_text", "image"] },
+        "footerBrandIconText": { "type": "string" },
+        "footerBrandImageUrl": { "type": "string" },
+        "footerBrandColor": { "type": "string" }
+      }
+    },
+    "AdminSecret": {
+      "title": "AdminSecret",
+      "description": "Protected secret slug URL for the administrator dashboard",
+      "type": "object",
+      "properties": {
+        "slug": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["slug"]
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": "Student",
+      "description": "Collection of institutional students and login credentials"
+    },
+    "/attendance/{recordId}": {
+      "schema": "AttendanceRecord",
+      "description": "Collection of verified lecture attendance timestamps"
+    },
+    "/settings/session": {
+      "schema": "SessionConfig",
+      "description": "Document holding active lecture session configuration"
+    },
+    "/settings/customization": {
+      "schema": "AppCustomization",
+      "description": "Document holding custom UI copy, write-ups and logo assets"
+    },
+    "/settings/adminSecret": {
+      "schema": "AdminSecret",
+      "description": "Document holding the unique protected admin URL key"
+    }
+  }
+}

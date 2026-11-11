@@ -1,0 +1,6 @@
+{
+  "name": "Tema Student Attendance & Login Portal",
+  "description": "Pixel-perfect Tema student login and attendance tracking portal with comprehensive admin management panel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
