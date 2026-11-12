@@ -71,25 +71,33 @@ export const StudentLoginForm: React.FC<StudentLoginFormProps> = ({
       <div>
         <div className="flex items-center justify-between pt-1 pb-3 relative">
           {/* Back arrow on left */}
-          <button
-            type="button"
-            onClick={() => {
-              setMatricNumber('');
-              setPassword('');
-              setErrorMsg('');
-            }}
-            title="Reset form"
-            className="p-1 -ml-1 text-gray-900 hover:text-gray-600 rounded-full transition-colors active:scale-95"
-          >
-            <ArrowLeft className="w-6 h-6 stroke-[2.2]" />
-          </button>
+          {customization.showBackArrow !== false ? (
+            <button
+              type="button"
+              onClick={() => {
+                if (customization.disableBackArrowAction) return;
+                setMatricNumber('');
+                setPassword('');
+                setErrorMsg('');
+              }}
+              title="Reset form"
+              className="p-1 -ml-1 text-gray-900 hover:text-gray-600 rounded-full transition-colors active:scale-95 cursor-pointer"
+            >
+              <ArrowLeft className="w-6 h-6 stroke-[2.2]" />
+            </button>
+          ) : (
+            <div className="w-6 h-6" />
+          )}
 
           {/* Centered language selector */}
           {customization.showLanguageSelector !== false ? (
             <button
               type="button"
-              onClick={onOpenLanguageModal}
-              className="flex items-center gap-1 text-[15px] text-[#555555] hover:text-gray-800 transition-colors font-normal"
+              onClick={() => {
+                if (customization.disableLanguageAction) return;
+                onOpenLanguageModal();
+              }}
+              className="flex items-center gap-1 text-[15px] text-[#555555] hover:text-gray-800 transition-colors font-normal cursor-pointer"
             >
               <span>{displayLanguage}</span>
               <ChevronDown className="w-4 h-4 text-[#555555]" />
@@ -140,14 +148,19 @@ export const StudentLoginForm: React.FC<StudentLoginFormProps> = ({
               </div>
 
               {/* Info Icon Button */}
-              <button
-                type="button"
-                onClick={() => setShowInfoTooltip(!showInfoTooltip)}
-                className="p-1 text-[#65676b] hover:text-gray-800 transition-colors rounded-full"
-                title="Format Information"
-              >
-                <Info className="w-5 h-5 stroke-[1.8]" />
-              </button>
+              {customization.showMatricInfoIcon !== false && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (customization.disableMatricInfoAction) return;
+                    setShowInfoTooltip(!showInfoTooltip);
+                  }}
+                  className="p-1 text-[#65676b] hover:text-gray-800 transition-colors rounded-full cursor-pointer"
+                  title="Format Information"
+                >
+                  <Info className="w-5 h-5 stroke-[1.8]" />
+                </button>
+              )}
             </div>
 
             {/* Info popover tooltip */}
@@ -158,7 +171,7 @@ export const StudentLoginForm: React.FC<StudentLoginFormProps> = ({
                   <button
                     type="button"
                     onClick={() => setShowInfoTooltip(false)}
-                    className="text-slate-400 hover:text-white text-xs"
+                    className="text-slate-400 hover:text-white text-xs cursor-pointer"
                   >
                     ✕
                   </button>
@@ -186,18 +199,20 @@ export const StudentLoginForm: React.FC<StudentLoginFormProps> = ({
                 className="w-full bg-transparent text-[16px] text-gray-900 placeholder:text-[#65676b] focus:outline-none"
               />
 
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="p-1 text-[#65676b] hover:text-gray-800 transition-colors rounded-full"
-                title={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? (
-                  <EyeOff className="w-5 h-5 stroke-[1.8]" />
-                ) : (
-                  <Eye className="w-5 h-5 stroke-[1.8]" />
-                )}
-              </button>
+              {customization.showPasswordToggle !== false && (
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="p-1 text-[#65676b] hover:text-gray-800 transition-colors rounded-full cursor-pointer"
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5 stroke-[1.8]" />
+                  ) : (
+                    <Eye className="w-5 h-5 stroke-[1.8]" />
+                  )}
+                </button>
+              )}
             </div>
           </div>
 
@@ -239,7 +254,13 @@ export const StudentLoginForm: React.FC<StudentLoginFormProps> = ({
             <div className="pt-2 text-center">
               <button
                 type="button"
-                onClick={onOpenForgotPassword}
+                onClick={(e) => {
+                  if (customization.disableForgotPasswordAction) {
+                    e.preventDefault();
+                    return; // Disabled: Does NOT react after clicking
+                  }
+                  onOpenForgotPassword();
+                }}
                 className="text-[#4b5563] hover:text-gray-900 text-[15px] font-medium transition-colors cursor-pointer"
               >
                 {customization.forgotPasswordText || 'Forgotten password?'}
@@ -254,7 +275,13 @@ export const StudentLoginForm: React.FC<StudentLoginFormProps> = ({
         {customization.showCreateAccount !== false && (
           <button
             type="button"
-            onClick={onOpenCreateAccount}
+            onClick={(e) => {
+              if (customization.disableCreateAccountAction) {
+                e.preventDefault();
+                return; // Disabled: Does NOT react after clicking
+              }
+              onOpenCreateAccount();
+            }}
             style={{
               borderColor: customization.createAccountBorderColor || '#0064e0',
               color: customization.createAccountTextColor || '#0064e0',

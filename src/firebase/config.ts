@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
 
 // Initialize Firebase App
@@ -29,27 +29,25 @@ export interface FirestoreErrorInfo {
 }
 
 export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errMsg = error instanceof Error ? error.message : String(error);
+  const errCode = (error as { code?: string })?.code;
+  const isOffline =
+    errMsg.includes('client is offline') ||
+    errMsg.includes('offline mode') ||
+    errMsg.includes('unavailable') ||
+    errCode === 'unavailable' ||
+    errCode === 'failed-precondition';
+
   const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
+    error: errMsg,
     operationType,
     path,
   };
-  console.error('Firestore Error: ', JSON.stringify(errInfo));
+
+  if (isOffline) {
+    console.warn('Firebase is operating in offline cache mode:', JSON.stringify(errInfo));
+  } else {
+    console.error('Firestore Error: ', JSON.stringify(errInfo));
+  }
   return errInfo;
 }
-
-// Connection check on boot
-export async function testConnection(): Promise<boolean> {
-  try {
-    await getDocFromServer(doc(db, 'settings', 'connectionTest'));
-    return true;
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('the client is offline')) {
-      console.warn('Firebase is operating in offline cache mode.');
-    }
-    return false;
-  }
-}
-
-// Kick off test connection
-testConnection().catch((err) => console.warn('Firebase init connection test:', err));

@@ -1516,29 +1516,192 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToLogin, onCustomi
                   className="space-y-6"
                 >
                   {/* 1. TOP BAR & LANGUAGE TEXT */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
-                    <div className="flex items-center gap-2 border-b border-slate-100 pb-2.5">
-                      <Type className="w-4 h-4 text-blue-600" />
-                      <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider">
-                        1. Top Language Selector Text
-                      </h4>
+                  <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                      <div className="flex items-center gap-2">
+                        <Type className="w-4 h-4 text-blue-600" />
+                        <div>
+                          <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider">
+                            1. Top Navigation & Language Selector
+                          </h4>
+                          <p className="text-[11px] text-slate-500">
+                            Configure visibility, labels, and whether clicking triggers an action or is inactive (no reaction).
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
-                        Language Selector Label
-                      </label>
-                      <input
-                        type="text"
-                        value={customization.languageText}
-                        onChange={(e) =>
-                          setCustomizationState({ ...customization, languageText: e.target.value })
-                        }
-                        placeholder="e.g. English (UK)"
-                        className="w-full px-3.5 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-[#0064e0]"
-                      />
-                      <span className="text-[10px] text-slate-400 mt-1 block">
-                        Displays at the top center of the screen next to the downward chevron.
-                      </span>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Language Selector Card */}
+                      <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2.5">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1.5 border-b border-slate-200/60">
+                          <div>
+                            <div className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                              <span>Language Selector</span>
+                              {customization.disableLanguageAction ? (
+                                <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                  Action OFF (No Reaction)
+                                </span>
+                              ) : (
+                                <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                  Action ON (Opens List)
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[10px] text-slate-500">
+                              Choose if tapping opens language switcher or does nothing.
+                            </div>
+                          </div>
+
+                          {/* Action Switcher */}
+                          <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200 text-[11px] font-semibold">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCustomizationState({
+                                  ...customization,
+                                  disableLanguageAction: false,
+                                })
+                              }
+                              className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                                !customization.disableLanguageAction
+                                  ? 'bg-[#0064e0] text-white shadow-xs'
+                                  : 'text-slate-600 hover:text-slate-900'
+                              }`}
+                            >
+                              Action ON
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCustomizationState({
+                                  ...customization,
+                                  disableLanguageAction: true,
+                                })
+                              }
+                              className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                                customization.disableLanguageAction
+                                  ? 'bg-amber-600 text-white shadow-xs'
+                                  : 'text-slate-600 hover:text-slate-900'
+                              }`}
+                            >
+                              Action OFF
+                            </button>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-medium text-slate-700 mb-1">
+                            Language Label Text
+                          </label>
+                          <input
+                            type="text"
+                            value={customization.languageText}
+                            onChange={(e) =>
+                              setCustomizationState({ ...customization, languageText: e.target.value })
+                            }
+                            placeholder="e.g. English (UK)"
+                            className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-[#0064e0]"
+                          />
+                        </div>
+
+                        <div className="pt-0.5 flex justify-end">
+                          <label className="flex items-center gap-1.5 cursor-pointer text-[11px] font-medium text-slate-700">
+                            <input
+                              type="checkbox"
+                              checked={customization.showLanguageSelector !== false}
+                              onChange={(e) =>
+                                setCustomizationState({
+                                  ...customization,
+                                  showLanguageSelector: e.target.checked,
+                                })
+                              }
+                              className="w-3.5 h-3.5 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                            />
+                            <span>Visible on Screen</span>
+                          </label>
+                        </div>
+                      </div>
+
+                      {/* Back Arrow Card */}
+                      <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2.5">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1.5 border-b border-slate-200/60">
+                          <div>
+                            <div className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                              <span>Back Arrow (←)</span>
+                              {customization.disableBackArrowAction ? (
+                                <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                  Action OFF (No Reaction)
+                                </span>
+                              ) : (
+                                <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                  Action ON (Resets Form)
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[10px] text-slate-500">
+                              Choose if tapping clears inputs or does nothing.
+                            </div>
+                          </div>
+
+                          {/* Action Switcher */}
+                          <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200 text-[11px] font-semibold">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCustomizationState({
+                                  ...customization,
+                                  disableBackArrowAction: false,
+                                })
+                              }
+                              className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                                !customization.disableBackArrowAction
+                                  ? 'bg-[#0064e0] text-white shadow-xs'
+                                  : 'text-slate-600 hover:text-slate-900'
+                              }`}
+                            >
+                              Action ON
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setCustomizationState({
+                                  ...customization,
+                                  disableBackArrowAction: true,
+                                })
+                              }
+                              className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                                customization.disableBackArrowAction
+                                  ? 'bg-amber-600 text-white shadow-xs'
+                                  : 'text-slate-600 hover:text-slate-900'
+                              }`}
+                            >
+                              Action OFF
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="text-[11px] text-slate-600 py-1">
+                          The back arrow appears at the top left of the student login screen. When Action is OFF, clicking it produces no reaction.
+                        </div>
+
+                        <div className="pt-0.5 flex justify-end">
+                          <label className="flex items-center gap-1.5 cursor-pointer text-[11px] font-medium text-slate-700">
+                            <input
+                              type="checkbox"
+                              checked={customization.showBackArrow !== false}
+                              onChange={(e) =>
+                                setCustomizationState({
+                                  ...customization,
+                                  showBackArrow: e.target.checked,
+                                })
+                              }
+                              className="w-3.5 h-3.5 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                            />
+                            <span>Visible on Screen</span>
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -1703,11 +1866,34 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToLogin, onCustomi
 
                   {/* 3. INPUT FIELDS PLACEHOLDERS */}
                   <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
-                    <div className="flex items-center gap-2 border-b border-slate-100 pb-2.5">
-                      <Type className="w-4 h-4 text-blue-600" />
-                      <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider">
-                        3. Input Fields & Tooltips
-                      </h4>
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                      <div className="flex items-center gap-2">
+                        <Type className="w-4 h-4 text-blue-600" />
+                        <div>
+                          <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider">
+                            3. Input Fields & Icons
+                          </h4>
+                          <p className="text-[11px] text-slate-500">
+                            Configure field placeholders and the interactive behavior of the (ⓘ) format guide icon.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={customization.showPasswordToggle !== false}
+                            onChange={(e) =>
+                              setCustomizationState({
+                                ...customization,
+                                showPasswordToggle: e.target.checked,
+                              })
+                            }
+                            className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                          />
+                          <span>Show Eye (👁)</span>
+                        </label>
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1748,52 +1934,148 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToLogin, onCustomi
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                      <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">
-                          Info Popover Title (When clicking ⓘ)
-                        </label>
-                        <input
-                          type="text"
-                          value={customization.matricInfoTitle}
-                          onChange={(e) =>
-                            setCustomizationState({
-                              ...customization,
-                              matricInfoTitle: e.target.value,
-                            })
-                          }
-                          placeholder="Matric Number Format"
-                          className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-[#0064e0]"
-                        />
+                    {/* Info (ⓘ) Icon Action Switcher & Configuration */}
+                    <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200/60">
+                        <div>
+                          <div className="text-xs font-bold text-slate-800 flex items-center gap-2">
+                            <span>Info Guide Icon (ⓘ) Button</span>
+                            {customization.disableMatricInfoAction ? (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                Action Inactive (No Reaction on Click)
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                Action Active (Opens Guide Popover)
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-slate-500">
+                            When Action is OFF, the ⓘ icon remains visible in the input field but does NOT react or open anything when clicked.
+                          </div>
+                        </div>
+
+                        {/* Action Switcher */}
+                        <div className="flex items-center gap-1.5 bg-white p-1 rounded-lg border border-slate-200 text-xs font-semibold">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setCustomizationState({
+                                ...customization,
+                                disableMatricInfoAction: false,
+                              })
+                            }
+                            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                              !customization.disableMatricInfoAction
+                                ? 'bg-[#0064e0] text-white shadow-xs'
+                                : 'text-slate-600 hover:text-slate-900'
+                            }`}
+                          >
+                            Action ON (Reacts)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setCustomizationState({
+                                ...customization,
+                                disableMatricInfoAction: true,
+                              })
+                            }
+                            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                              customization.disableMatricInfoAction
+                                ? 'bg-amber-600 text-white shadow-xs'
+                                : 'text-slate-600 hover:text-slate-900'
+                            }`}
+                          >
+                            Action OFF (No Reaction)
+                          </button>
+                        </div>
                       </div>
 
-                      <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">
-                          Info Popover Description
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <div>
+                          <label className="block text-[11px] font-medium text-slate-600 mb-1">
+                            Info Popover Title (When ⓘ Reacts)
+                          </label>
+                          <input
+                            type="text"
+                            value={customization.matricInfoTitle}
+                            onChange={(e) =>
+                              setCustomizationState({
+                                ...customization,
+                                matricInfoTitle: e.target.value,
+                              })
+                            }
+                            placeholder="Matric Number Format"
+                            className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-[#0064e0]"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-medium text-slate-600 mb-1">
+                            Info Popover Description
+                          </label>
+                          <input
+                            type="text"
+                            value={customization.matricInfoDesc}
+                            onChange={(e) =>
+                              setCustomizationState({
+                                ...customization,
+                                matricInfoDesc: e.target.value,
+                              })
+                            }
+                            placeholder="Enter your registered institutional matric number..."
+                            className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-[#0064e0]"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end pt-1">
+                        <label className="flex items-center gap-1.5 cursor-pointer text-xs font-medium text-slate-700">
+                          <input
+                            type="checkbox"
+                            checked={customization.showMatricInfoIcon !== false}
+                            onChange={(e) =>
+                              setCustomizationState({
+                                ...customization,
+                                showMatricInfoIcon: e.target.checked,
+                              })
+                            }
+                            className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                          />
+                          <span>Visible on Screen (Show ⓘ Icon)</span>
                         </label>
-                        <input
-                          type="text"
-                          value={customization.matricInfoDesc}
-                          onChange={(e) =>
-                            setCustomizationState({
-                              ...customization,
-                              matricInfoDesc: e.target.value,
-                            })
-                          }
-                          placeholder="Enter your registered institutional matric number..."
-                          className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-[#0064e0]"
-                        />
                       </div>
                     </div>
                   </div>
 
                   {/* 4. BUTTONS & FORGOTTEN PASSWORD WRITE-UPS */}
                   <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
-                    <div className="flex items-center gap-2 border-b border-slate-100 pb-2.5">
-                      <Sliders className="w-4 h-4 text-blue-600" />
-                      <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider">
-                        4. Action Buttons & Links
-                      </h4>
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                      <div className="flex items-center gap-2">
+                        <Sliders className="w-4 h-4 text-blue-600" />
+                        <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider">
+                          4. Action Buttons & Links (Turn On / Off)
+                        </h4>
+                      </div>
+
+                      {/* Whole Portal Active Toggle */}
+                      <label className="flex items-center gap-2 cursor-pointer bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+                        <input
+                          type="checkbox"
+                          checked={customization.isPortalActive !== false}
+                          onChange={(e) =>
+                            setCustomizationState({
+                              ...customization,
+                              isPortalActive: e.target.checked,
+                            })
+                          }
+                          className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        />
+                        <span className="text-xs font-bold text-slate-800">
+                          {customization.isPortalActive !== false ? 'Portal Open' : 'Portal Closed'}
+                        </span>
+                      </label>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -1876,72 +2158,226 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToLogin, onCustomi
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-slate-100">
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
-                        Forgotten Password Link Text
-                      </label>
-                      <input
-                        type="text"
-                        value={customization.forgotPasswordText}
-                        onChange={(e) =>
-                          setCustomizationState({
-                            ...customization,
-                            forgotPasswordText: e.target.value,
-                          })
-                        }
-                        placeholder="Forgotten password?"
-                        className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-[#0064e0]"
-                      />
-                    </div>
+                    {/* Forgotten Password Link with On/Off & Disable Action */}
+                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200/60">
+                        <div>
+                          <div className="text-xs font-bold text-slate-800 flex items-center gap-2">
+                            <span>"Forgotten password?" Link</span>
+                            {customization.disableForgotPasswordAction ? (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                Action Inactive (Does Not React on Click)
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                Action Active (Opens Recovery)
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-slate-500">
+                            Configure whether clicking this link opens the recovery modal or does NOT react after clicking.
+                          </div>
+                        </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-100">
-                      <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">
-                          Create Account Button Text
-                        </label>
-                        <input
-                          type="text"
-                          value={customization.createAccountButtonText}
-                          onChange={(e) =>
-                            setCustomizationState({
-                              ...customization,
-                              createAccountButtonText: e.target.value,
-                            })
-                          }
-                          placeholder="Create new account"
-                          className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-[#0064e0]"
-                        />
+                        {/* Action On/Off Switcher */}
+                        <div className="flex items-center gap-1.5 bg-white p-1 rounded-lg border border-slate-200 text-xs font-semibold">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setCustomizationState({
+                                ...customization,
+                                disableForgotPasswordAction: false,
+                              })
+                            }
+                            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                              !customization.disableForgotPasswordAction
+                                ? 'bg-[#0064e0] text-white shadow-xs'
+                                : 'text-slate-600 hover:text-slate-900'
+                            }`}
+                          >
+                            Action ON (Reacts)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setCustomizationState({
+                                ...customization,
+                                disableForgotPasswordAction: true,
+                              })
+                            }
+                            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                              customization.disableForgotPasswordAction
+                                ? 'bg-amber-600 text-white shadow-xs'
+                                : 'text-slate-600 hover:text-slate-900'
+                            }`}
+                          >
+                            Action OFF (No Reaction)
+                          </button>
+                        </div>
                       </div>
 
-                      <div>
-                        <label className="block text-xs font-medium text-slate-700 mb-1">
-                          Outline & Text Color
-                        </label>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="color"
-                            value={customization.createAccountBorderColor}
-                            onChange={(e) =>
-                              setCustomizationState({
-                                ...customization,
-                                createAccountBorderColor: e.target.value,
-                                createAccountTextColor: e.target.value,
-                              })
-                            }
-                            className="w-9 h-9 rounded-lg border border-slate-300 cursor-pointer p-0.5"
-                          />
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center pt-1">
+                        <div>
+                          <label className="block text-[11px] font-medium text-slate-600 mb-1">
+                            Link Text
+                          </label>
                           <input
                             type="text"
-                            value={customization.createAccountBorderColor}
+                            value={customization.forgotPasswordText}
                             onChange={(e) =>
                               setCustomizationState({
                                 ...customization,
-                                createAccountBorderColor: e.target.value,
-                                createAccountTextColor: e.target.value,
+                                forgotPasswordText: e.target.value,
                               })
                             }
-                            className="flex-1 px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-mono"
+                            placeholder="Forgotten password?"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white focus:ring-2 focus:ring-[#0064e0]"
                           />
+                        </div>
+
+                        <div className="flex items-center justify-between sm:justify-end gap-3 pt-4 sm:pt-0">
+                          <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700">
+                            <input
+                              type="checkbox"
+                              checked={customization.showForgotPassword !== false}
+                              onChange={(e) =>
+                                setCustomizationState({
+                                  ...customization,
+                                  showForgotPassword: e.target.checked,
+                                })
+                              }
+                              className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                            />
+                            <span>Visible on Screen</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Create Account Button with On/Off & Disable Action */}
+                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200/60">
+                        <div>
+                          <div className="text-xs font-bold text-slate-800 flex items-center gap-2">
+                            <span>"Create new account" Button</span>
+                            {customization.disableCreateAccountAction ? (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                Action Inactive (Does Not React on Click)
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                Action Active (Opens Account Modal)
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-slate-500">
+                            Configure whether clicking this button opens the account form or does NOT react after clicking.
+                          </div>
+                        </div>
+
+                        {/* Action On/Off Switcher */}
+                        <div className="flex items-center gap-1.5 bg-white p-1 rounded-lg border border-slate-200 text-xs font-semibold">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setCustomizationState({
+                                ...customization,
+                                disableCreateAccountAction: false,
+                              })
+                            }
+                            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                              !customization.disableCreateAccountAction
+                                ? 'bg-[#0064e0] text-white shadow-xs'
+                                : 'text-slate-600 hover:text-slate-900'
+                            }`}
+                          >
+                            Action ON (Reacts)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setCustomizationState({
+                                ...customization,
+                                disableCreateAccountAction: true,
+                              })
+                            }
+                            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                              customization.disableCreateAccountAction
+                                ? 'bg-amber-600 text-white shadow-xs'
+                                : 'text-slate-600 hover:text-slate-900'
+                            }`}
+                          >
+                            Action OFF (No Reaction)
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                        <div>
+                          <label className="block text-[11px] font-medium text-slate-600 mb-1">
+                            Button Label Text
+                          </label>
+                          <input
+                            type="text"
+                            value={customization.createAccountButtonText}
+                            onChange={(e) =>
+                              setCustomizationState({
+                                ...customization,
+                                createAccountButtonText: e.target.value,
+                              })
+                            }
+                            placeholder="Create new account"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs bg-white focus:ring-2 focus:ring-[#0064e0]"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-medium text-slate-600 mb-1">
+                            Border & Text Color
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              value={customization.createAccountBorderColor}
+                              onChange={(e) =>
+                                setCustomizationState({
+                                  ...customization,
+                                  createAccountBorderColor: e.target.value,
+                                  createAccountTextColor: e.target.value,
+                                })
+                              }
+                              className="w-9 h-9 rounded-lg border border-slate-300 cursor-pointer p-0.5"
+                            />
+                            <input
+                              type="text"
+                              value={customization.createAccountBorderColor}
+                              onChange={(e) =>
+                                setCustomizationState({
+                                  ...customization,
+                                  createAccountBorderColor: e.target.value,
+                                  createAccountTextColor: e.target.value,
+                                })
+                              }
+                              className="flex-1 px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-mono bg-white"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex items-end justify-start sm:justify-end pb-1">
+                          <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700">
+                            <input
+                              type="checkbox"
+                              checked={customization.showCreateAccount !== false}
+                              onChange={(e) =>
+                                setCustomizationState({
+                                  ...customization,
+                                  showCreateAccount: e.target.checked,
+                                })
+                              }
+                              className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                            />
+                            <span>Visible on Screen</span>
+                          </label>
                         </div>
                       </div>
                     </div>
@@ -2165,10 +2601,83 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToLogin, onCustomi
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {/* Done Button Config */}
-                        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-semibold text-slate-700">Done / Return Button</span>
-                            <label className="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                        <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2.5">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1.5 border-b border-slate-200/60">
+                            <div>
+                              <div className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                                <span>Done Button</span>
+                                {customization.disableSuccessDoneAction ? (
+                                  <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                    Action OFF (No Reaction)
+                                  </span>
+                                ) : (
+                                  <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                    Action ON (Closes Modal)
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[10px] text-slate-500">
+                                When OFF, button remains visible but does NOT react when clicked.
+                              </div>
+                            </div>
+
+                            {/* Action Switcher */}
+                            <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200 text-[11px] font-semibold">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setCustomizationState({
+                                    ...customization,
+                                    disableSuccessDoneAction: false,
+                                  })
+                                }
+                                className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                                  !customization.disableSuccessDoneAction
+                                    ? 'bg-[#0064e0] text-white shadow-xs'
+                                    : 'text-slate-600 hover:text-slate-900'
+                                }`}
+                              >
+                                Action ON
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setCustomizationState({
+                                    ...customization,
+                                    disableSuccessDoneAction: true,
+                                  })
+                                }
+                                className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                                  customization.disableSuccessDoneAction
+                                    ? 'bg-amber-600 text-white shadow-xs'
+                                    : 'text-slate-600 hover:text-slate-900'
+                                }`}
+                              >
+                                Action OFF
+                              </button>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-medium text-slate-700 mb-1">
+                              Button Label Text
+                            </label>
+                            <input
+                              type="text"
+                              value={customization.successDoneButtonText || 'Done / Return to Login'}
+                              onChange={(e) =>
+                                setCustomizationState({
+                                  ...customization,
+                                  successDoneButtonText: e.target.value,
+                                })
+                              }
+                              placeholder="Done / Return to Login"
+                              className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-[#0064e0]"
+                            />
+                          </div>
+
+                          <div className="pt-0.5 flex justify-end">
+                            <label className="flex items-center gap-1.5 cursor-pointer text-[11px] font-medium text-slate-700">
                               <input
                                 type="checkbox"
                                 checked={customization.showSuccessDoneButton !== false}
@@ -2178,30 +2687,91 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToLogin, onCustomi
                                     showSuccessDoneButton: e.target.checked,
                                   })
                                 }
-                                className="rounded text-blue-600 focus:ring-blue-500"
+                                className="w-3.5 h-3.5 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
                               />
-                              <span>Turn On</span>
+                              <span>Visible on Screen</span>
                             </label>
                           </div>
-                          <input
-                            type="text"
-                            value={customization.successDoneButtonText || 'Done / Return to Login'}
-                            onChange={(e) =>
-                              setCustomizationState({
-                                ...customization,
-                                successDoneButtonText: e.target.value,
-                              })
-                            }
-                            placeholder="Done / Return to Login"
-                            className="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs"
-                          />
                         </div>
 
                         {/* Print Button Config */}
-                        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-semibold text-slate-700">Print Attendance Button</span>
-                            <label className="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                        <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2.5">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1.5 border-b border-slate-200/60">
+                            <div>
+                              <div className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                                <span>Print Button</span>
+                                {customization.disableSuccessPrintAction ? (
+                                  <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                    Action OFF (No Reaction)
+                                  </span>
+                                ) : (
+                                  <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                    Action ON (Opens Print)
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[10px] text-slate-500">
+                                When OFF, button remains visible but does NOT react when clicked.
+                              </div>
+                            </div>
+
+                            {/* Action Switcher */}
+                            <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200 text-[11px] font-semibold">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setCustomizationState({
+                                    ...customization,
+                                    disableSuccessPrintAction: false,
+                                  })
+                                }
+                                className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                                  !customization.disableSuccessPrintAction
+                                    ? 'bg-[#0064e0] text-white shadow-xs'
+                                    : 'text-slate-600 hover:text-slate-900'
+                                }`}
+                              >
+                                Action ON
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setCustomizationState({
+                                    ...customization,
+                                    disableSuccessPrintAction: true,
+                                  })
+                                }
+                                className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                                  customization.disableSuccessPrintAction
+                                    ? 'bg-amber-600 text-white shadow-xs'
+                                    : 'text-slate-600 hover:text-slate-900'
+                                }`}
+                              >
+                                Action OFF
+                              </button>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-medium text-slate-700 mb-1">
+                              Button Label Text
+                            </label>
+                            <input
+                              type="text"
+                              value={customization.successPrintButtonText || 'Print Attendance Slip'}
+                              onChange={(e) =>
+                                setCustomizationState({
+                                  ...customization,
+                                  successPrintButtonText: e.target.value,
+                                })
+                              }
+                              placeholder="Print Attendance Slip"
+                              className="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:ring-2 focus:ring-[#0064e0]"
+                            />
+                          </div>
+
+                          <div className="pt-0.5 flex justify-end">
+                            <label className="flex items-center gap-1.5 cursor-pointer text-[11px] font-medium text-slate-700">
                               <input
                                 type="checkbox"
                                 checked={customization.showSuccessPrintButton !== false}
@@ -2211,23 +2781,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToLogin, onCustomi
                                     showSuccessPrintButton: e.target.checked,
                                   })
                                 }
-                                className="rounded text-blue-600 focus:ring-blue-500"
+                                className="w-3.5 h-3.5 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
                               />
-                              <span>Turn On</span>
+                              <span>Visible on Screen</span>
                             </label>
                           </div>
-                          <input
-                            type="text"
-                            value={customization.successPrintButtonText || 'Print Attendance Slip'}
-                            onChange={(e) =>
-                              setCustomizationState({
-                                ...customization,
-                                successPrintButtonText: e.target.value,
-                              })
-                            }
-                            placeholder="Print Attendance Slip"
-                            className="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs"
-                          />
                         </div>
                       </div>
 
@@ -2640,10 +3198,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToLogin, onCustomi
 
                     {/* Top Header Mockup */}
                     <div className="flex items-center justify-between pb-4 border-b border-gray-100 text-xs">
-                      <ArrowLeft className="w-5 h-5 text-gray-800" />
-                      <span className="text-gray-600 font-medium">
-                        {customization.languageText || 'English (UK)'} ⌵
-                      </span>
+                      {customization.showBackArrow !== false ? (
+                        <ArrowLeft className="w-5 h-5 text-gray-800" />
+                      ) : (
+                        <div className="w-5 h-5" />
+                      )}
+                      {customization.showLanguageSelector !== false ? (
+                        <span className="text-gray-600 font-medium">
+                          {customization.languageText || 'English (UK)'} ⌵
+                        </span>
+                      ) : (
+                        <div />
+                      )}
                       <div className="w-5 h-5" />
                     </div>
 
@@ -2658,7 +3224,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToLogin, onCustomi
                         <span className="text-gray-700 font-medium">
                           |{customization.matricPlaceholder || 'Matric Number'}
                         </span>
-                        <span className="text-gray-400 font-bold text-xs">ⓘ</span>
+                        {customization.showMatricInfoIcon !== false && (
+                          <span className="text-gray-400 font-bold text-xs">ⓘ</span>
+                        )}
                       </div>
 
                       {/* Input 2 Mockup */}
@@ -2666,8 +3234,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToLogin, onCustomi
                         <span className="text-gray-500">
                           {customization.passwordPlaceholder || 'Password'}
                         </span>
-                        <span className="text-gray-400 text-xs">👁</span>
+                        {customization.showPasswordToggle !== false && (
+                          <span className="text-gray-400 text-xs">👁</span>
+                        )}
                       </div>
+
+                      {/* Portal Closed Mockup Banner */}
+                      {customization.isPortalActive === false && (
+                        <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg text-[10px] text-amber-800 text-center font-medium">
+                          Portal Closed by Administrator
+                        </div>
+                      )}
 
                       {/* Login Button Mockup */}
                       <div
@@ -2675,7 +3252,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ onBackToLogin, onCustomi
                           backgroundColor: customization.loginButtonBgColor || '#0064e0',
                           color: customization.loginButtonTextColor || '#ffffff',
                         }}
-                        className="w-full py-3 rounded-full text-center text-xs font-medium shadow-xs"
+                        className={`w-full py-3 rounded-full text-center text-xs font-medium shadow-xs ${
+                          customization.isPortalActive === false ? 'opacity-50' : ''
+                        }`}
                       >
                         {customization.loginButtonText || 'Log in'}
                       </div>

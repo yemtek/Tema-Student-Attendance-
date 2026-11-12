@@ -49,6 +49,9 @@ export interface AppCustomization {
   // Top Navigation
   languageText: string;
   showLanguageSelector?: boolean;
+  disableLanguageAction?: boolean; // When true: visible, but does NOT react after clicking
+  showBackArrow?: boolean;
+  disableBackArrowAction?: boolean; // When true: visible, but does NOT react after clicking
 
   // Main Center Logo
   logoType: 'letter' | 'image';
@@ -61,7 +64,10 @@ export interface AppCustomization {
   matricPlaceholder: string;
   matricInfoTitle: string;
   matricInfoDesc: string;
+  showMatricInfoIcon?: boolean;
+  disableMatricInfoAction?: boolean; // When true: visible, but does NOT react after clicking
   passwordPlaceholder: string;
+  showPasswordToggle?: boolean;
 
   // Buttons & Links & Toggles
   loginButtonText: string;
@@ -70,11 +76,13 @@ export interface AppCustomization {
 
   forgotPasswordText: string;
   showForgotPassword?: boolean;
+  disableForgotPasswordAction?: boolean; // When true: visible, but does NOT react after clicking
 
   createAccountButtonText: string;
   createAccountBorderColor: string;
   createAccountTextColor: string;
   showCreateAccount?: boolean;
+  disableCreateAccountAction?: boolean; // When true: visible, but does NOT react after clicking
 
   // Button order switcher
   buttonOrder?: 'login_first' | 'create_first';
@@ -91,7 +99,9 @@ export interface AppCustomization {
   successDoneButtonText?: string;
   successPrintButtonText?: string;
   showSuccessDoneButton?: boolean;
+  disableSuccessDoneAction?: boolean; // When true: visible, but does NOT react after clicking
   showSuccessPrintButton?: boolean;
+  disableSuccessPrintAction?: boolean; // When true: visible, but does NOT react after clicking
   successButtonOrder?: 'done_first' | 'print_first';
 
   // Footer Branding

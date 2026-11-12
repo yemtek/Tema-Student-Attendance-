@@ -36,7 +36,10 @@ export const StudentSuccessModal: React.FC<StudentSuccessModalProps> = ({
   const renderDoneButton = (isPrimary: boolean) => (
     <button
       type="button"
-      onClick={onClose}
+      onClick={() => {
+        if (customization?.disableSuccessDoneAction) return; // Disabled: Does not react after clicking
+        onClose();
+      }}
       className={`w-full py-3 rounded-full font-medium text-sm transition-all cursor-pointer ${
         isPrimary
           ? 'bg-[#0064e0] hover:bg-blue-700 text-white shadow-sm'
@@ -50,7 +53,10 @@ export const StudentSuccessModal: React.FC<StudentSuccessModalProps> = ({
   const renderPrintButton = (isPrimary: boolean) => (
     <button
       type="button"
-      onClick={handlePrint}
+      onClick={() => {
+        if (customization?.disableSuccessPrintAction) return; // Disabled: Does not react after clicking
+        handlePrint();
+      }}
       className={`w-full py-2.5 px-3 rounded-full text-xs font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
         isPrimary
           ? 'bg-[#0064e0] hover:bg-blue-700 text-white shadow-sm py-3 text-sm'

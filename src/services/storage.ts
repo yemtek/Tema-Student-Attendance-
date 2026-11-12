@@ -34,6 +34,9 @@ export const DEFAULT_ADMIN_PASSWORD = 'yemcojoe';
 export const defaultCustomization: AppCustomization = {
   languageText: 'English (UK)',
   showLanguageSelector: true,
+  disableLanguageAction: false,
+  showBackArrow: true,
+  disableBackArrowAction: false,
 
   logoType: 'letter',
   logoLetter: 'T',
@@ -44,7 +47,10 @@ export const defaultCustomization: AppCustomization = {
   matricPlaceholder: 'Matric Number',
   matricInfoTitle: 'Matric Number Format',
   matricInfoDesc: 'Enter your registered institutional matric number (e.g. CSC/2021/0492 or SWE/2021/0104).',
+  showMatricInfoIcon: true,
+  disableMatricInfoAction: false,
   passwordPlaceholder: 'Password',
+  showPasswordToggle: true,
 
   loginButtonText: 'Log in',
   loginButtonBgColor: '#0064e0',
@@ -52,11 +58,13 @@ export const defaultCustomization: AppCustomization = {
 
   forgotPasswordText: 'Forgotten password?',
   showForgotPassword: true,
+  disableForgotPasswordAction: false,
 
   createAccountButtonText: 'Create new account',
   createAccountBorderColor: '#0064e0',
   createAccountTextColor: '#0064e0',
   showCreateAccount: true,
+  disableCreateAccountAction: false,
 
   buttonOrder: 'login_first',
 
@@ -71,7 +79,9 @@ export const defaultCustomization: AppCustomization = {
   successDoneButtonText: 'Done / Return to Login',
   successPrintButtonText: 'Print Attendance Slip',
   showSuccessDoneButton: true,
+  disableSuccessDoneAction: false,
   showSuccessPrintButton: true,
+  disableSuccessPrintAction: false,
   successButtonOrder: 'done_first',
 
   footerBrandName: 'Tema',
@@ -453,56 +463,59 @@ export function resetToDefaults(): void {
   );
 }
 
-// Full Cloud Sync initialization
+// Full Cloud Sync initialization with offline-resilient fallback
 export async function initializeFirebaseSync(): Promise<void> {
   try {
-    await seedInitialFirestoreDataIfEmpty();
+    await seedInitialFirestoreDataIfEmpty().catch((err) =>
+      console.warn('Firebase seeding skipped (offline):', err)
+    );
+
     const [remoteStudents, remoteAttendance, remoteSession, remoteCustomization, remoteSlug, remotePass] =
       await Promise.all([
-        fetchStudentsFromFirestore(),
-        fetchAttendanceFromFirestore(),
-        fetchSessionConfigFromFirestore(),
-        fetchCustomizationFromFirestore(),
-        fetchAdminSecretSlugFromFirestore(),
-        fetchAdminPasswordFromFirestore(),
+        fetchStudentsFromFirestore().catch(() => []),
+        fetchAttendanceFromFirestore().catch(() => []),
+        fetchSessionConfigFromFirestore().catch(() => null),
+        fetchCustomizationFromFirestore().catch(() => null),
+        fetchAdminSecretSlugFromFirestore().catch(() => null),
+        fetchAdminPasswordFromFirestore().catch(() => null),
       ]);
 
-    if (remoteStudents.length > 0) {
+    if (remoteStudents && remoteStudents.length > 0) {
       saveStudents(remoteStudents);
     }
-    if (remoteAttendance.length > 0) {
+    if (remoteAttendance && remoteAttendance.length > 0) {
       saveAttendanceRecords(remoteAttendance);
     }
     if (remoteSession) {
       try {
         localStorage.setItem(SESSION_KEY, JSON.stringify(remoteSession));
       } catch (e) {
-        console.error(e);
+        console.warn(e);
       }
     }
     if (remoteCustomization) {
       try {
         localStorage.setItem(CUSTOMIZATION_KEY, JSON.stringify(remoteCustomization));
       } catch (e) {
-        console.error(e);
+        console.warn(e);
       }
     }
     if (remoteSlug) {
       try {
         localStorage.setItem(ADMIN_SECRET_KEY, remoteSlug);
       } catch (e) {
-        console.error(e);
+        console.warn(e);
       }
     }
     if (remotePass) {
       try {
         localStorage.setItem(ADMIN_PASSWORD_KEY, remotePass);
       } catch (e) {
-        console.error(e);
+        console.warn(e);
       }
     }
   } catch (error) {
-    console.warn('Initial Firebase sync completed with fallback:', error);
+    console.warn('Initial Firebase sync completed with offline fallback:', error);
   }
 }
 
